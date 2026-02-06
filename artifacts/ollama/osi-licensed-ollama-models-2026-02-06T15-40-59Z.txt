@@ -1,0 +1,5 @@
+# OSI-licensed Ollama model tags (UTC 2026-02-06T15:40:59Z)
+deepseek-r1:7b
+mistral:latest
+phi4-mini:latest
+qwen2.5-coder:7b
