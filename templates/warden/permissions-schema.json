@@ -1,0 +1,191 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://hummbl.ai/schemas/permissions/v0.0.1",
+  "title": "HUMMBL Agent Permission Registry Schema",
+  "description": "Canonical permission definition for lattice agents. Warden validates all permission files against this schema.",
+  "type": "object",
+  "required": ["agent", "version", "schema_version", "autonomy_level", "capabilities", "metadata"],
+  "properties": {
+    "agent": {
+      "type": "string",
+      "description": "Agent identifier (kebab-case)",
+      "pattern": "^[a-z0-9-]+$",
+      "examples": ["warden", "ledger", "triage"]
+    },
+    "version": {
+      "type": "string",
+      "description": "Semantic version of this permission set",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "examples": ["0.0.1", "1.2.3"]
+    },
+    "schema_version": {
+      "type": "string",
+      "description": "Version of the schema this file conforms to",
+      "enum": ["0.0.1"]
+    },
+    "autonomy_level": {
+      "type": "string",
+      "description": "Current autonomy tier assigned to this agent",
+      "enum": ["co-pilot", "supervised", "autonomous", "locked"]
+    },
+    "capabilities": {
+      "type": "object",
+      "description": "Map of capability names to their permission definitions",
+      "patternProperties": {
+        "^[a-z_]+$": {
+          "$ref": "#/definitions/capability"
+        }
+      },
+      "additionalProperties": false
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["created_at", "created_by", "last_updated", "approval_chain"],
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "UTC timestamp when this permission set was created"
+        },
+        "created_by": {
+          "type": "string",
+          "description": "Human or agent that created this permission set"
+        },
+        "last_updated": {
+          "type": "string",
+          "format": "date-time",
+          "description": "UTC timestamp of last modification"
+        },
+        "last_updated_by": {
+          "type": "string",
+          "description": "Entity that made last modification"
+        },
+        "approval_chain": {
+          "type": "array",
+          "description": "Ordered list of approvals required for changes",
+          "items": {
+            "type": "string"
+          },
+          "examples": [["reuben"], ["reuben", "rpbx"]]
+        },
+        "review_date": {
+          "type": "string",
+          "format": "date",
+          "description": "Scheduled review date for these permissions"
+        },
+        "notes": {
+          "type": "string",
+          "description": "Human-readable context for these permissions"
+        }
+      }
+    },
+    "constraints": {
+      "type": "object",
+      "description": "Global constraints applying to all capabilities",
+      "properties": {
+        "max_blast_radius": {
+          "type": "string",
+          "enum": ["none", "self", "team", "environment", "organization"],
+          "description": "Maximum blast radius this agent may impact"
+        },
+        "allowed_environments": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["local", "dev", "staging", "production"]
+          },
+          "description": "Environments this agent may operate in"
+        },
+        "time_restrictions": {
+          "type": "object",
+          "properties": {
+            "allowed_days": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
+              }
+            },
+            "allowed_hours": {
+              "type": "object",
+              "properties": {
+                "start": { "type": "string", "pattern": "^\\d{2}:\\d{2}$" },
+                "end": { "type": "string", "pattern": "^\\d{2}:\\d{2}$" }
+              }
+            },
+            "timezone": {
+              "type": "string",
+              "examples": ["America/New_York", "UTC"]
+            }
+          }
+        },
+        "rate_limits": {
+          "type": "object",
+          "properties": {
+            "actions_per_minute": { "type": "integer", "minimum": 1 },
+            "actions_per_hour": { "type": "integer", "minimum": 1 },
+            "concurrent_actions": { "type": "integer", "minimum": 1 }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "capability": {
+      "type": "object",
+      "required": ["scope", "gated"],
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "Human-readable description of this capability"
+        },
+        "scope": {
+          "type": "string",
+          "description": "Resources this capability may access",
+          "examples": ["none", "self", "tagged_dev", "all", "production_read_only"]
+        },
+        "gated": {
+          "type": "boolean",
+          "description": "Whether this capability requires explicit approval"
+        },
+        "approval_from": {
+          "type": "array",
+          "description": "Required approvers if gated=true",
+          "items": { "type": "string" },
+          "examples": [["reuben"], ["reuben", "rpbx"]]
+        },
+        "gate_type": {
+          "type": "string",
+          "enum": ["threshold_gate", "human_gate", "time_gate", "consensus_gate"],
+          "description": "Type of gate to apply if gated=true"
+        },
+        "thresholds": {
+          "type": "object",
+          "description": "Threshold parameters for threshold_gate",
+          "properties": {
+            "max_cost_impact": { "type": "number", "description": "Dollar amount" },
+            "max_resources_affected": { "type": "integer" },
+            "max_risk_score": { "type": "integer", "minimum": 0, "maximum": 100 },
+            "required_confidence": { "type": "number", "minimum": 0, "maximum": 1 }
+          }
+        },
+        "evidence_required": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["timestamp", "context", "risk_assessment", "similar_actions", "rollback_plan"]
+          }
+        },
+        "evidence_retention_days": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "How long to retain evidence for this capability"
+        },
+        "rollback_plan_required": {
+          "type": "boolean",
+          "description": "Whether agent must provide rollback plan before execution"
+        }
+      }
+    }
+  }
+}

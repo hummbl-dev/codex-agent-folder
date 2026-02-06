@@ -1,0 +1,109 @@
+{
+  "agent": "warden",
+  "version": "0.0.1",
+  "schema_version": "0.0.1",
+  "autonomy_level": "supervised",
+  "capabilities": {
+    "read_permission_registry": {
+      "description": "Read any agent's permission file",
+      "scope": "all",
+      "gated": false,
+      "evidence_required": ["timestamp"],
+      "evidence_retention_days": 90
+    },
+    "validate_permission_schema": {
+      "description": "Validate permission JSON against canonical schema",
+      "scope": "all",
+      "gated": false,
+      "evidence_required": ["timestamp", "context"],
+      "evidence_retention_days": 90
+    },
+    "query_agent_status": {
+      "description": "Query current autonomy level and health of any agent",
+      "scope": "all",
+      "gated": false,
+      "evidence_required": ["timestamp"],
+      "evidence_retention_days": 30
+    },
+    "enforce_policy_violation": {
+      "description": "Apply sanctions when agent violates policy",
+      "scope": "all",
+      "gated": false,
+      "evidence_required": ["timestamp", "context", "risk_assessment"],
+      "evidence_retention_days": 2555
+    },
+    "trigger_circuit_breaker": {
+      "description": "Isolate failing agent to prevent cascade",
+      "scope": "all",
+      "gated": true,
+      "approval_from": ["reuben"],
+      "gate_type": "consensus_gate",
+      "evidence_required": ["timestamp", "context", "risk_assessment", "similar_actions"],
+      "evidence_retention_days": 730,
+      "rollback_plan_required": false
+    },
+    "modify_agent_permissions": {
+      "description": "Update permission registry for other agents",
+      "scope": "all_except_self",
+      "gated": true,
+      "approval_from": ["reuben"],
+      "gate_type": "human_gate",
+      "evidence_required": ["timestamp", "context", "risk_assessment", "rollback_plan"],
+      "evidence_retention_days": 2555,
+      "rollback_plan_required": true
+    },
+    "change_autonomy_level": {
+      "description": "Promote or demote agent autonomy tier",
+      "scope": "all_except_self",
+      "gated": true,
+      "approval_from": ["reuben"],
+      "gate_type": "consensus_gate",
+      "evidence_required": ["timestamp", "context", "risk_assessment", "similar_actions"],
+      "evidence_retention_days": 730,
+      "rollback_plan_required": false
+    },
+    "override_gate_decision": {
+      "description": "Override a previously made gate decision",
+      "scope": "all",
+      "gated": true,
+      "approval_from": ["reuben", "rpbx"],
+      "gate_type": "consensus_gate",
+      "evidence_required": ["timestamp", "context", "risk_assessment", "rollback_plan"],
+      "evidence_retention_days": 2555,
+      "rollback_plan_required": true
+    },
+    "configure_gates": {
+      "description": "Modify gate rules and routing logic",
+      "scope": "all",
+      "gated": true,
+      "approval_from": ["reuben", "rpbx"],
+      "gate_type": "consensus_gate",
+      "evidence_required": ["timestamp", "context", "risk_assessment"],
+      "evidence_retention_days": 730,
+      "rollback_plan_required": true
+    }
+  },
+  "metadata": {
+    "created_at": "2026-02-06T02:00:00Z",
+    "created_by": "rpbx",
+    "last_updated": "2026-02-06T02:00:00Z",
+    "last_updated_by": "rpbx",
+    "approval_chain": ["reuben", "rpbx"],
+    "review_date": "2026-03-06",
+    "notes": "Warden governs all agents including itself via dual-control. Self-modification requires Reuben + RPBx approval."
+  },
+  "constraints": {
+    "max_blast_radius": "organization",
+    "allowed_environments": ["local", "dev", "staging", "production"],
+    "time_restrictions": {
+      "allowed_days": ["mon", "tue", "wed", "thu", "fri", "sat", "sun"],
+      "allowed_hours": { "start": "00:00", "end": "23:59" },
+      "timezone": "UTC"
+    },
+    "rate_limits": {
+      "actions_per_minute": 120,
+      "actions_per_hour": 3600,
+      "concurrent_actions": 10
+    }
+  }
+}

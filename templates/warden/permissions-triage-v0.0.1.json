@@ -1,0 +1,134 @@
+{
+  "agent": "triage",
+  "version": "0.0.1",
+  "schema_version": "0.0.1",
+  "autonomy_level": "supervised",
+  "capabilities": {
+    "read_observability_data": {
+      "description": "Read metrics, logs, traces from monitoring systems",
+      "scope": "all",
+      "gated": false,
+      "evidence_required": ["timestamp"],
+      "evidence_retention_days": 90
+    },
+    "investigate_alert": {
+      "description": "Autonomous investigation of triggered alerts",
+      "scope": "all",
+      "gated": false,
+      "evidence_required": ["timestamp", "context"],
+      "evidence_retention_days": 90
+    },
+    "correlate_signals": {
+      "description": "Correlate metrics, logs, deployments, and traces",
+      "scope": "all",
+      "gated": false,
+      "evidence_required": ["timestamp", "context"],
+      "evidence_retention_days": 90
+    },
+    "hypothesize_root_cause": {
+      "description": "Generate and test root cause hypotheses",
+      "scope": "all",
+      "gated": false,
+      "evidence_required": ["timestamp", "context", "risk_assessment"],
+      "evidence_retention_days": 90
+    },
+    "recommend_remediation": {
+      "description": "Suggest remediation actions",
+      "scope": "all",
+      "gated": false,
+      "evidence_required": ["timestamp", "context", "risk_assessment", "rollback_plan"],
+      "evidence_retention_days": 90
+    },
+    "execute_l1_remediation": {
+      "description": "Execute Level 1 (low-risk) remediation actions",
+      "scope": "dev_staging",
+      "gated": true,
+      "approval_from": ["warden"],
+      "gate_type": "threshold_gate",
+      "thresholds": {
+        "max_risk_score": 20,
+        "max_resources_affected": 3,
+        "required_confidence": 0.9
+      },
+      "evidence_required": ["timestamp", "context", "risk_assessment", "rollback_plan"],
+      "evidence_retention_days": 365,
+      "rollback_plan_required": true
+    },
+    "execute_l2_remediation": {
+      "description": "Execute Level 2 (medium-risk) remediation actions",
+      "scope": "dev_staging",
+      "gated": true,
+      "approval_from": ["reuben"],
+      "gate_type": "human_gate",
+      "evidence_required": ["timestamp", "context", "risk_assessment", "similar_actions", "rollback_plan"],
+      "evidence_retention_days": 730,
+      "rollback_plan_required": true
+    },
+    "execute_l3_remediation": {
+      "description": "Execute Level 3 (high-risk) remediation actions",
+      "scope": "none",
+      "gated": true,
+      "approval_from": ["reuben", "rpbx"],
+      "gate_type": "consensus_gate",
+      "evidence_required": ["timestamp", "context", "risk_assessment", "similar_actions", "rollback_plan"],
+      "evidence_retention_days": 2555,
+      "rollback_plan_required": true
+    },
+    "trigger_rollback": {
+      "description": "Initiate rollback of recent deployment",
+      "scope": "dev_staging",
+      "gated": true,
+      "approval_from": ["warden"],
+      "gate_type": "threshold_gate",
+      "thresholds": {
+        "max_risk_score": 30,
+        "required_confidence": 0.85
+      },
+      "evidence_required": ["timestamp", "context", "risk_assessment", "rollback_plan"],
+      "evidence_retention_days": 730,
+      "rollback_plan_required": true
+    },
+    "escalate_to_human": {
+      "description": "Escalate incident to on-call engineer",
+      "scope": "all",
+      "gated": false,
+      "evidence_required": ["timestamp", "context", "risk_assessment"],
+      "evidence_retention_days": 365
+    },
+    "page_on_call": {
+      "description": "Trigger pager/SMS to on-call engineer",
+      "scope": "production",
+      "gated": true,
+      "approval_from": ["warden"],
+      "gate_type": "threshold_gate",
+      "thresholds": {
+        "max_risk_score": 50
+      },
+      "evidence_required": ["timestamp", "context", "risk_assessment"],
+      "evidence_retention_days": 365
+    }
+  },
+  "metadata": {
+    "created_at": "2026-02-06T02:00:00Z",
+    "created_by": "rpbx",
+    "last_updated": "2026-02-06T02:00:00Z",
+    "last_updated_by": "rpbx",
+    "approval_chain": ["reuben"],
+    "review_date": "2026-03-06",
+    "notes": "Triage investigates autonomously but executes remediation through Warden gates. L1 actions in dev/staging require Warden threshold approval. Production requires human consensus."
+  },
+  "constraints": {
+    "max_blast_radius": "environment",
+    "allowed_environments": ["dev", "staging", "production"],
+    "time_restrictions": {
+      "allowed_days": ["mon", "tue", "wed", "thu", "fri", "sat", "sun"],
+      "allowed_hours": { "start": "00:00", "end": "23:59" },
+      "timezone": "UTC"
+    },
+    "rate_limits": {
+      "actions_per_minute": 60,
+      "actions_per_hour": 1000,
+      "concurrent_actions": 5
+    }
+  }
+}
