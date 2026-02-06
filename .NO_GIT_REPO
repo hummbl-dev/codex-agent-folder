@@ -1,0 +1,4 @@
+# This workspace is an intentional non-repo zone.
+# Do not run `git init` here.
+# All version-controlled work lives in sub-repositories (e.g., workspace/hummbl/operational/hummbl-agent).
+# Authorized by: Reuben Bowlby, 2026-02-05
