@@ -323,7 +323,11 @@ grep -n 'v0.0.1' workspace/agents/rpbx/IDENTITY.md workspace/agents/rpbx/SOUL.md
   - Local status observed: `## main...origin/main [behind 16]` with untracked: `CLASSIFICATION.md`, `agents/rpbx.md`.
 - `codex-agent-folder` repository:
   - Initialized locally at `codex-agent-folder/.git` on `main`.
-  - Initial commit present; no remote configured yet (`git remote -v` empty). Push pending URL/approval.
+  - Remote: `origin https://github.com/hummbl-dev/codex-agent-folder.git` — pushed and tracking `origin/main`.
+  - Commits: `4ee3bdf` (initial scaffold), `a6cf3a1` (Verified State update).
+- `hummbl-agent` PR opened:
+  - Branch `docs/governance-atomic-additions-20260206T014636Z` → PR [#32](https://github.com/hummbl-dev/hummbl-agent/pull/32).
+  - Local `main` checked out, ahead 2 (pending PR merge + fast-forward).
 
 ## Agent Assignment Context
 
