@@ -1,0 +1,176 @@
+# OPTION A (Revised) - Root repo tracks scaffold only
+# shared-hummbl-space/ is a nested git repo (separate project)
+# Created: 2026-02-06
+# Authorized by: Reuben Bowlby
+
+# ============================================================================
+# IGNORE: System files
+# ============================================================================
+.DS_Store
+*.swp
+*.swo
+*~
+
+# ============================================================================
+# IGNORE: Environment and secrets
+# ============================================================================
+.env*
+.secrets
+*.secret.*
+*.key
+*.pem
+*.p12
+*.pfx
+
+# ============================================================================
+# IGNORE: Node modules and build artifacts
+# ============================================================================
+node_modules/
+dist/
+build/
+__pycache__/
+*.pyc
+
+# ============================================================================
+# IGNORE: IDE
+# ============================================================================
+.vscode/
+.idea/
+*.iml
+
+# ============================================================================
+# IGNORE: Symlinks (point to shared-hummbl-space which is separate repo)
+# ============================================================================
+/^agents
+/^avatars
+/^memory
+/^scripts
+/^workspace/agents
+/^workspace/avatars
+/^workspace/memory
+/^workspace/scripts
+
+# ============================================================================
+# IGNORE: The nested repo itself (separate git project)
+# Track only marker file to indicate presence
+# ============================================================================
+/^shared-hummbl-space/*
+!/^shared-hummbl-space/.gitrepo
+
+# ============================================================================
+# IGNORE: Temporary/archived files
+# ============================================================================
+*.archived
+*.bak
+*.backup
+*.local
+
+# ============================================================================
+# IGNORE: Codex agent folder (already merged)
+# ============================================================================
+/^codex-agent-folder
+
+# ============================================================================
+# IGNORE: Home directory clutter (not part of project)
+# ============================================================================
+.CFUserTextEncoding
+.android/
+.antigravity/
+.aws/
+.bash_history
+.bash_sessions/
+.cargo/
+.cdk/
+.claude-server-commander/
+.claude.json*
+.claude/
+.codeium/
+.codex/
+.config/
+.cursor/
+.docker/
+.expo/
+.gemini/
+.git-hooks/
+.gitconfig*
+.gk/
+.gnupg/
+.husky/
+.kimi/
+.kube/
+.lesshst
+.local/
+.minikube/
+.mcp-auth/
+.npm/
+.npmrc
+.nvm/
+.oh-my-zsh/
+.ollama/
+.openclaw/
+.pdf-filler-profiles/
+.profile
+.python_history
+.redhat/
+.safety/
+.serena/
+.slack/
+.sovereign/
+.ssh/
+.streamlit/
+.subversion/
+.supermaven/
+.terraform.d/
+.todos.json
+.vs-kubernetes/
+.windsurf/
+.z
+.zcompdump*
+.zshenv*
+.zsh_history*
+.zshrc*
+.zsh_sessions/
+.Trash/
+Applications/
+Archives/
+Desktop/
+Documents/
+Downloads/
+Google Drive/
+Library/
+Movies/
+Music/
+Pictures/
+Public/
+Virtual Machines.localized/
+workspace/hummbl/
+
+# ============================================================================
+# IGNORE: Other project directories
+# ============================================================================
+csv-test-files/
+firebase-debug.log
+go/
+hummbl-agent-federation/
+hummbl-monorepo/
+hummbl-production/
+ollama-terminal-folder/
+openclaw/
+prompts-backup/
+quick_test.sh
+schemas/
+utilities/
+validate_csv_response.py
+/SITREP-*.md
+hummbl-cleanup-report.md
+FILE_INVENTORY.md
+CSV_SETUP_COMPLETE.txt
+CSV_TESTING_SUITE.md
+csv-*.txt
+csv-*.md
+cleanup-hummbl-repos.sh
+*.pdf
+state/
+_NO_GIT_REPO
+NO_GIT_REPO
+.REPO_AUTHORIZED.bak

@@ -69,25 +69,47 @@ This workspace is operated from two distinct environments:
 
 **Conflict resolution:** If terminal verification contradicts a Copilot report, trust terminal evidence unconditionally.
 
-## Remote Repo Topology (`codex-agent-folder`)
+## Remote Repo Topology
 
-A GitHub remote repository named `codex-agent-folder` exists (HITL). Treat its exact URL as unverified until confirmed by one of:
-- GitHub UI (human verification), or
-- Local repo evidence after clone/init (`git remote -v`), or
-- A provided URL from Reuben in the current session.
+The workspace uses a **two-repo architecture** with agent-aligned entry points.
 
-### Default Policy (Option A — Separate Directory)
+### Root Repository (`/Users/others`)
 
-- `/Users/others` remains a **non-repo** workspace. The `.NO_GIT_REPO` sentinel is authoritative.
-- The `codex-agent-folder` git repository lives in a **separate directory**: `/Users/others/codex-agent-folder/`.
-- That repo may contain **only** the following:
-  - `AGENTS.md` (this file, or a synced copy)
-  - `.NO_GIT_REPO` (reference copy)
-  - `scripts/validate-agent-stacks.sh`
-  - Non-sensitive operational documentation and templates
-  - Any additional scaffold/control artifacts Reuben explicitly approves
+This is your **personal workspace repository** — it tracks scaffold, entry scripts, and tooling configuration. It does NOT track agent identity content (which lives in the nested repo).
 
-### Forbidden by Default (Not Committable Without Explicit Per-Event Authorization)
+**Remote:** Configurable per your preference
+
+**Tracked:**
+- `AGENTS.md` — this file
+- `.gitignore` — strict exclusions
+- `.REPO_AUTHORIZED` — conversion marker
+- `bin/` — agent entry scripts
+- `README.md` — workspace documentation
+
+**Not tracked (via .gitignore):**
+- `shared-hummbl-space/` — nested repo (see below)
+- `agents/`, `avatars/`, `memory/` — symlinks to nested repo
+- Home directory clutter
+
+### Nested Repository (`shared-hummbl-space/`)
+
+This is the **HUMMBL agent federation repository** — it contains all 58 agent identity stacks, avatars, and shared memory.
+
+**Remote:** `https://github.com/hummbl-dev/shared-hummbl-space.git`
+
+**Contents:**
+- `agents/` — 58 agent identity stacks (IDENTITY.md, AGENT.md, SOUL.md, USER.md, MEMORY.md)
+- `avatars/` — PNG assets + GALLERY.md registry
+- `memory/` — Shared workspace daily logs
+- `scripts/` — Agent tooling
+
+**To update:**
+```bash
+cd shared-hummbl-space
+git pull origin main
+```
+
+### Forbidden by Default
 
 | Path Pattern | Reason |
 |--------------|--------|
@@ -101,62 +123,72 @@ A GitHub remote repository named `codex-agent-folder` exists (HITL). Treat its e
 
 **Allowed by default within `avatars/`:** `avatars/templates/**` (if such a directory exists) or any explicitly approved non-asset documentation.
 
-### Upgrading to Option B (Root Becomes Repo)
+### Option A (Revised) — Nested Repo with Agent Entry Points
 
-If Reuben decides `/Users/others` should itself become the `codex-agent-folder` repo:
+**Current Status:** Active as of 2026-02-06
 
-1. Reuben must explicitly authorize in the current session.
-2. A strict `.gitignore` allowlist must be created and approved **before** `git init`.
-3. The `.NO_GIT_REPO` sentinel must be removed or replaced with a `.REPO_AUTHORIZED` sentinel documenting the date, rationale, and approved tracking boundary.
-4. The "Root Workspace: Intentional Non-Repo Zone" section below must be updated to reflect the new policy.
+**Rationale:** You want each CLI tool to spawn its named agent identity. This architecture:
+1. Keeps agent content (`shared-hummbl-space/`) in its own repo with its own remote
+2. Tracks scaffold/entry scripts in root repo (`/Users/others`)
+3. Uses symlinks for convenient access
+4. Provides clear agent-aligned entry points
 
-Until that process completes, Option A is the enforced default.
+**Conversion completed:**
+- ✅ Root repo initialized (`/Users/others/.git`)
+- ✅ `.NO_GIT_REPO` archived
+- ✅ `.REPO_AUTHORIZED` created
+- ✅ `.gitignore` with strict allowlist
+- ✅ Entry scripts created (`bin/kimi-entry.sh`, `bin/codex-entry.sh`, `bin/claude-entry.sh`)
+- ✅ Agent identity stacks verified (58 agents total)
+- ✅ `codex-agent-folder/` history merged
 
 ## Workspace Layout
 
 ```
-/Users/others/                          # Intentional non-repo zone (see .NO_GIT_REPO)
-├── AGENTS.md                           # This file — Codex reads from CWD upward
-├── .NO_GIT_REPO                        # Sentinel: forbids git init in root workspace
-├── codex-agent-folder/                 # Git repo tracking scaffold/control artifacts only
-│   ├── AGENTS.md                       # Synced copy (or symlink)
-│   ├── scripts/
-│   │   └── validate-agent-stacks.sh
-│   └── ...                             # Only approved non-sensitive artifacts
-├── workspace/
-│   ├── agents/                         # 51 agent directories, each with full identity stack
-│   │   ├── <agent>/
-│   │   │   ├── AGENT.md
-│   │   │   ├── IDENTITY.md
-│   │   │   ├── USER.md
-│   │   │   ├── SOUL.md
-│   │   │   ├── MEMORY.md
-│   │   │   └── memory/                 # Daily logs (YYYY-MM-DD.md)
-│   │   └── rpbx/                       # RPBx — founder mirror agent (v0.0.1 locked)
-│   │       └── stability/              # Governance sweep artifacts
-│   └── hummbl/
-│       └── operational/
-│           └── hummbl-agent/           # Git repo (see Reported State below)
-│               ├── agents/             # Agent assignment specs (e.g., rpbx.md)
-│               └── _state/
-│                   └── evidence/       # Governance evidence logs
-├── avatars/                            # Color PNG, mono PNG, brief MD per agent
-│   └── GALLERY.md                      # Registry of all avatar assets + approvals
-├── memory/                             # Shared workspace daily memory logs
-├── scripts/
-│   ├── generate-avatar.sh              # Wraps generate_compass_avatar.py
-│   ├── generate_compass_avatar.py
-│   ├── orchestrate.sh
-│   ├── run-cmd.sh
-│   └── validate-agent-stacks.sh        # Read-only scaffold validator
-├── AGENT_BIRTH_PROCESS.md
-├── AGENT_BIRTH_LOG_TEMPLATE.md
-└── EXECUTION_AUTHORITY_PROTOCOL.md
+/Users/others/                          # Root workspace (git repo — scaffold only)
+├── AGENTS.md                           # This file — canonical agent instructions
+├── .gitignore                          # Strict allowlist pattern
+├── .REPO_AUTHORIZED                    # Option A conversion marker
+├── README.md                           # Workspace documentation
+├── bin/                                # Agent entry scripts
+│   ├── kimi-entry.sh                   # Launch kimi-cli with Kimi identity
+│   ├── codex-entry.sh                  # Launch codex with Codex identity
+│   └── claude-entry.sh                 # Launch claude with Claude identity
+├── shared-hummbl-space/                # NESTED GIT REPO (hummbl-agent)
+│   ├── .git/                           # Separate git repository
+│   ├── agents/                         # 58 agent identity stacks
+│   │   ├── kimi/
+│   │   ├── codex/
+│   │   ├── claude/
+│   │   ├── rpbx/
+│   │   └── ... (55 more)
+│   ├── avatars/                        # PNG assets + GALLERY.md
+│   ├── memory/                         # Shared daily memory logs
+│   └── scripts/                        # Agent tooling
+├── agents → shared-hummbl-space/agents # Symlink (convenience)
+├── avatars → shared-hummbl-space/avatars
+├── memory → shared-hummbl-space/memory
+└── scripts → shared-hummbl-space/scripts
+
+/workspace/                             # Additional workspace (separate from root)
+└── hummbl/
+    └── operational/
+        └── hummbl-agent/               # Operational hummbl-agent repo
 ```
 
-### Root Workspace: Intentional Non-Repo Zone
+### Root Workspace: Scaffold Repository
 
-`/Users/others` is deliberately not a git repository. All identity, avatar, and memory work is local-only. The presence of `.NO_GIT_REPO` at the root forbids initialization. If version control is needed, use the separate `codex-agent-folder` repo directory by default. Converting `/Users/others` into a git repo requires explicit authorization and an approved allowlist/ignore policy (see "Upgrading to Option B" above).
+`/Users/others` is now a **git repository tracking scaffold only**. The agent identity content lives in `shared-hummbl-space/` which is a nested git repo.
+
+**Symlink Strategy:**
+- Root symlinks (`agents`, `avatars`, `memory`, `scripts`) point to `shared-hummbl-space/`
+- This allows convenient access: `cat agents/codex/IDENTITY.md`
+- Changes flow through to the nested repo
+
+**Key Principle:** Each CLI tool spawns its named agent:
+- `kimi` → Kimi agent
+- `codex` → Codex agent  
+- `claude` → Claude agent
 
 ## Core Protocols
 
@@ -330,6 +362,41 @@ Kimi remediation complete (identity and avatar parity achieved):
 - `hummbl-agent` PR opened:
   - Branch `docs/governance-atomic-additions-20260206T014636Z` → PR [#32](https://github.com/hummbl-dev/hummbl-agent/pull/32).
   - Local `main` checked out, ahead 2 (pending PR merge + fast-forward).
+
+## Agent Entry Points
+
+Each CLI tool spawns its named agent identity via entry scripts in `bin/`:
+
+### Usage
+
+```bash
+# Add to ~/.zshrc:
+alias kimi='~/bin/kimi-entry.sh'
+alias codex='~/bin/codex-entry.sh'
+alias claude='~/bin/claude-entry.sh'
+
+# Then use:
+kimi                    # Launches kimi-cli with Kimi identity
+codex                   # Launches codex with Codex identity
+claude                  # Launches claude with Claude identity
+```
+
+### What Entry Scripts Do
+
+1. Set `AGENT_NAME` environment variable
+2. Set `AGENT_HOME` to `workspace/agents/<name>/`
+3. Display boot sequence with identity context
+4. Spawn the actual CLI tool
+
+### Agent Identities
+
+| Agent | CLI Tool | Role | Palette |
+|-------|----------|------|---------|
+| **Kimi** | `kimi-cli` | Execution, tooling, verification | steel/orange |
+| **Codex** | `codex` | Execution, RPBx assignments | compass/grid |
+| **Claude** | `claude` | Advisory, summarization, review | target/synthesis |
+
+All 58 agents (including these 3) have full identity stacks in `shared-hummbl-space/agents/`.
 
 ## Agent Assignment Context
 

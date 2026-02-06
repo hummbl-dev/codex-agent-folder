@@ -1,0 +1,29 @@
+# Repository Authorization Sentinel
+# =================================
+
+AUTHORIZED: 2026-02-06T15:00:00Z
+RATIONALE: >
+  Agent-aligned workspace — each CLI tool spawns its named agent identity.
+  Kimi CLI launches Kimi agent. Codex CLI launches Codex agent.
+  Claude Code launches Claude agent. Unified repository for scaffold,
+  agent metadata, and shared tooling.
+
+BOUNDARY: >
+  Root workspace tracks scaffold, agent metadata (IDENTITY.md, AGENT.md,
+  SOUL.md, USER.md, MEMORY.md index), and shared tooling.
+  Agent daily memories (memory/*.md), avatar PNGs, and secrets remain
+  local-only (gitignored).
+
+AGENT_COUNT: 58
+AGENTS: 56 original + Codex + Claude
+
+AUTHORIZED_BY: Reuben Bowlby
+CONVERSION_TYPE: Option B (Root becomes repo)
+PREVIOUS_POLICY: Option A (Non-repo with separate codex-agent-folder)
+
+# ============================================================================
+# VERIFICATION COMMAND
+# ============================================================================
+# Run this to verify repo state:
+#   git status --ignored | head -20
+# Expected: All sensitive paths should show as "ignored"
