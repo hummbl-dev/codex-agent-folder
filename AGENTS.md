@@ -308,6 +308,23 @@ grep -c '⏳' avatars/GALLERY.md || echo '0 pending'
 grep -n 'v0.0.1' workspace/agents/rpbx/IDENTITY.md workspace/agents/rpbx/SOUL.md workspace/agents/rpbx/AGENT.md
 ```
 
+### Verified State (terminal evidence — 2026-02-06T01:40:45Z)
+
+- Validator status: CLEAN — 52 agents scanned, 0 findings.
+  - Source: `codex-agent-folder/scripts/validate-agent-stacks.sh` executed from `/Users/others`.
+- Kimi remediation complete (identity and avatar parity achieved):
+  - Added: `workspace/agents/kimi/MEMORY.md`
+  - Added: `workspace/agents/kimi/memory/2026-02-05.md`
+  - Added: `avatars/kimi-avatar-brief.md`
+  - Palette reference: `workspace/agents/kimi/IDENTITY.md` — "steel/orange execution palette" (avatar consistent with `avatars/kimi-avatar.png`, `avatars/kimi-avatar-mono.png`).
+  - Gallery row present and approved: `avatars/GALLERY.md` (contains “Kimi … ✅ Approved (Reuben, 2026-02-05)”).
+- Agent count confirmed: 52 (contradicts earlier Copilot report of 51; terminal evidence is authoritative).
+- `workspace/hummbl/operational/hummbl-agent`:
+  - Local status observed: `## main...origin/main [behind 16]` with untracked: `CLASSIFICATION.md`, `agents/rpbx.md`.
+- `codex-agent-folder` repository:
+  - Initialized locally at `codex-agent-folder/.git` on `main`.
+  - Initial commit present; no remote configured yet (`git remote -v` empty). Push pending URL/approval.
+
 ## Agent Assignment Context
 
 RPBx's active assignment spec lives at:
