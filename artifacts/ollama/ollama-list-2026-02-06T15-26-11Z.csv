@@ -1,0 +1,7 @@
+name,id,size,modified
+codellama:7b,8fdf8f752f6e,3.8 GB,8 minutes ago
+mistral:latest,6577803aa9a0,4.4 GB,13 hours ago
+phi4-mini:latest,78fad5d182a7,2.5 GB,13 hours ago
+llama3.2:3b,a80c4f17acd5,2.0 GB,13 hours ago
+deepseek-r1:7b,755ced02ce7b,4.7 GB,13 hours ago
+qwen2.5-coder:7b,dae161e27b0e,4.7 GB,16 hours ago
