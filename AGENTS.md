@@ -93,12 +93,12 @@ This is your **personal workspace repository** — it tracks scaffold, entry scr
 
 ### Nested Repository (`shared-hummbl-space/`)
 
-This is the **HUMMBL agent federation repository** — it contains all 58 agent identity stacks, avatars, and shared memory.
+This is the **HUMMBL agent federation repository** — it contains all 65 agent identity stacks, avatars, and shared memory.
 
 **Remote:** `https://github.com/hummbl-dev/shared-hummbl-space.git`
 
 **Contents:**
-- `agents/` — 58 agent identity stacks (IDENTITY.md, AGENT.md, SOUL.md, USER.md, MEMORY.md)
+- `agents/` — 65 agent identity stacks (IDENTITY.md, AGENT.md, SOUL.md, USER.md, MEMORY.md)
 - `avatars/` — PNG assets + GALLERY.md registry
 - `memory/` — Shared workspace daily logs
 - `scripts/` — Agent tooling
@@ -139,7 +139,7 @@ git pull origin main
 - ✅ `.REPO_AUTHORIZED` created
 - ✅ `.gitignore` with strict allowlist
 - ✅ Entry scripts created (`bin/kimi-entry.sh`, `bin/codex-entry.sh`, `bin/claude-entry.sh`)
-- ✅ Agent identity stacks verified (58 agents total)
+- ✅ Agent identity stacks verified (65 agents total)
 - ✅ `codex-agent-folder/` history merged
 
 ## Workspace Layout
@@ -156,12 +156,12 @@ git pull origin main
 │   └── claude-entry.sh                 # Launch claude with Claude identity
 ├── shared-hummbl-space/                # NESTED GIT REPO (hummbl-agent)
 │   ├── .git/                           # Separate git repository
-│   ├── agents/                         # 58 agent identity stacks
+│   ├── agents/                         # 65 agent identity stacks
 │   │   ├── kimi/
 │   │   ├── codex/
 │   │   ├── claude/
 │   │   ├── rpbx/
-│   │   └── ... (55 more)
+│   │   └── ... (61 more)
 │   ├── avatars/                        # PNG assets + GALLERY.md
 │   ├── memory/                         # Shared daily memory logs
 │   └── scripts/                        # Agent tooling
@@ -225,7 +225,7 @@ git pull origin main
 
 - Log daily highlights in `memory/YYYY-MM-DD.md` **only when explicitly instructed** by Reuben.
 - **Do NOT write to any agent's personal memory** (`workspace/agents/*/memory/` or `*/MEMORY.md`) unless Reuben explicitly authorizes the target agent and content.
-- **Do NOT write memory for speculative work, failed branches, or tasks without user confirmation of relevance.** Memory pollution across 51 agents is a governance risk.
+- **Do NOT write memory for speculative work, failed branches, or tasks without user confirmation of relevance.** Memory pollution across 65 agents is a governance risk.
 - Promote durable truths to shared memory only with explicit approval.
 - Record escalation attempts + responses in shared daily memory only after Reuben confirms they should be persisted.
 
@@ -262,8 +262,8 @@ The following was reported by Opus 4.6 in VS Code Copilot Chat based on a Codex 
 ### Copilot Reports
 
 - RPBx identity stack created and locked at **v0.0.1** (approved by Reuben).
-- Identity Stack Governance Wave 1 completed — all 51 agents verified with full doc stacks.
-- Avatar remediation done: 9 individual agents got new assets; 6 team directories documented as "member avatars only". Gallery reported as 52 rows, zero pending.
+- Identity Stack Governance Wave 1 completed — all 51 agents verified with full doc stacks. (Count now 65 as of 2026-02-07.)
+- Avatar remediation done: 9 individual agents got new assets; 6 team directories documented as "member avatars only". Gallery reported as 65 rows, zero pending. All approved.
 - `AGENT_BIRTH_PROCESS.md` updated with mandatory gallery-update step.
 - `hummbl-agent` repo reported on `main`, approximately 16 commits behind `origin/main` (observed prior to any network constraint; accuracy unknown).
 - Untracked files in `hummbl-agent`: `CLASSIFICATION.md`, `agents/rpbx.md`.
@@ -340,28 +340,31 @@ grep -c '⏳' avatars/GALLERY.md || echo '0 pending'
 grep -n 'v0.0.1' workspace/agents/rpbx/IDENTITY.md workspace/agents/rpbx/SOUL.md workspace/agents/rpbx/AGENT.md
 ```
 
-### Verified State (terminal evidence — 2026-02-06T15:03:00Z)
+### Verified State (terminal evidence — 2026-02-07T10:55:00Z)
 
-- Validator status: CLEAN — 56 agents scanned, 0 findings.
+- Validator status: CLEAN — 65 agents scanned, 0 findings.
   - Source: `codex-agent-folder/scripts/validate-agent-stacks.sh` executed from `/Users/others`.
 - Batch approval complete (2026-02-06): Warden, Ledger, Triage, A11y — all approved, gallery updated, identity docs synced.
+- Smart guardrails pipeline LIVE on `main` (PR #33 merged 2026-02-07): `classify` → `code-checks` → `guardrails`. Both code and docs-only paths validated.
+- All feature branches cleaned. No stale branches on hummbl-agent.
+- Branch protection: to be re-enabled with `guardrails` as sole required check.
 
 Kimi remediation complete (identity and avatar parity achieved):
   - Added: `workspace/agents/kimi/MEMORY.md`
   - Added: `workspace/agents/kimi/memory/2026-02-05.md`
   - Added: `avatars/kimi-avatar-brief.md`
   - Palette reference: `workspace/agents/kimi/IDENTITY.md` — "steel/orange execution palette" (avatar consistent with `avatars/kimi-avatar.png`, `avatars/kimi-avatar-mono.png`).
-  - Gallery row present and approved: `avatars/GALLERY.md` (contains “Kimi … ✅ Approved (Reuben, 2026-02-05)”).
-- Agent count confirmed: 56 (52 original + 4 new: Warden, Ledger, Triage, A11y).
+  - Gallery row present and approved: `avatars/GALLERY.md` (contains "Kimi … ✅ Approved (Reuben, 2026-02-05)").
+- Agent count confirmed: 65.
 - `workspace/hummbl/operational/hummbl-agent`:
   - Local status observed: `## main...origin/main [behind 16]` with untracked: `CLASSIFICATION.md`, `agents/rpbx.md`.
 - `codex-agent-folder` repository:
   - Initialized locally at `codex-agent-folder/.git` on `main`.
   - Remote: `origin https://github.com/hummbl-dev/codex-agent-folder.git` — pushed and tracking `origin/main`.
-  - Commits: `4ee3bdf` (initial scaffold), `a6cf3a1` (Verified State update).
-- `hummbl-agent` PR opened:
+  - Commits: `20a784f` (HEAD), `f374c34` (Option A conversion), `edc582a` (ollama inventory), `a6372b2` (scripts), `8288b21` (inventory).
+- `hummbl-agent` PR #32 merged:
   - Branch `docs/governance-atomic-additions-20260206T014636Z` → PR [#32](https://github.com/hummbl-dev/hummbl-agent/pull/32).
-  - Local `main` checked out, ahead 2 (pending PR merge + fast-forward).
+  - Local `main` synced with `origin/main`. PR #32 merged 2026-02-05; PR #33 (smart guardrails) merged 2026-02-07.
 
 ## Agent Entry Points
 
@@ -396,7 +399,7 @@ claude                  # Launches claude with Claude identity
 | **Codex** | `codex` | Execution, RPBx assignments | compass/grid |
 | **Claude** | `claude` | Advisory, summarization, review | target/synthesis |
 
-All 58 agents (including these 3) have full identity stacks in `shared-hummbl-space/agents/`.
+All 65 agents (including these 3) have full identity stacks in `shared-hummbl-space/agents/`.
 
 ## Agent Assignment Context
 
