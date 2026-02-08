@@ -1,4 +1,5 @@
-# This workspace is an intentional non-repo zone.
-# Do not run `git init` here.
-# All version-controlled work lives in sub-repositories (e.g., workspace/hummbl/operational/hummbl-agent).
-# Authorized by: Reuben Bowlby, 2026-02-05
+# This workspace is an intentional scaffold git repository (control plane only).
+# Do not run `git init` here (already initialized).
+# Keep durable agent identity content in nested repos (for example: shared-hummbl-space/).
+# Authorized by: Reuben Bowlby, 2026-02-05 (UTC)
+# Canonicalized: 2026-02-08T22:05:04Z

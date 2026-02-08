@@ -135,7 +135,7 @@ git pull origin main
 
 **Conversion completed:**
 - ✅ Root repo initialized (`/Users/others/.git`)
-- ✅ `.NO_GIT_REPO` archived
+- ✅ `.NO_GIT_REPO` canonicalized (root is a scaffold git repo; identity content remains in nested repos)
 - ✅ `.REPO_AUTHORIZED` created
 - ✅ `.gitignore` with strict allowlist
 - ✅ Entry scripts created (`bin/kimi-entry.sh`, `bin/codex-entry.sh`, `bin/claude-entry.sh`)
@@ -215,7 +215,7 @@ git pull origin main
 - **No destructive commands** (`rm -rf`, force pushes, cleanup scripts) without explicit user approval.
 - **Treat networked operations as privileged.** Do not `clone`/`fetch`/`pull`/`push`/`remote add`/`submodule`/`lfs` without explicit user approval, regardless of presumed connectivity.
 - **Treat `git clone`, `git remote add`, `git submodule`, and `git lfs` as networked operations** requiring explicit approval.
-- **No `git init`** in the root workspace. The `.NO_GIT_REPO` sentinel is authoritative.
+- **No `git init`** in the root workspace (it is already initialized). The `.NO_GIT_REPO` sentinel documents this policy.
 - **No writes outside local subtree** by any script without explicit approval.
 - **Respect execution authority** per `EXECUTION_AUTHORITY_PROTOCOL.md` at all times.
 - **Escalate** when scope drifts or instructions are ambiguous — pause and confirm.
@@ -276,8 +276,14 @@ The following was reported by Opus 4.6 in VS Code Copilot Chat based on a Codex 
 # Confirm working directory
 pwd
 
-# Root must not be a git repo (anchored to absolute path)
-test ! -d /Users/others/.git && echo "OK: no root .git" || echo "ERROR: root .git exists — violates .NO_GIT_REPO policy"
+# Root must be a git repo (anchored to absolute path)
+test -d /Users/others/.git && echo "OK: root .git present" || echo "ERROR: root .git missing"
+
+# Root git remotes (local-only check)
+(
+    cd /Users/others || exit 1
+    git remote -v
+)
 
 # codex-agent-folder repo state (subshell — no directory leakage)
 if [ -d /Users/others/codex-agent-folder/.git ]; then
