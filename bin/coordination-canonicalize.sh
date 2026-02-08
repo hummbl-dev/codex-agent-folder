@@ -14,7 +14,12 @@
 
 set -euo pipefail
 
-LOG_PATH="${1:-/Users/others/founder-mode/founder-mode/_state/coordination/messages.tsv}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
+BIN_DIR="${ROOT_DIR}/bin"
+FOUNDER_REPO_DIR_DEFAULT="${ROOT_DIR}/founder-mode/founder-mode"
+
+LOG_PATH="${1:-${FOUNDER_REPO_DIR_DEFAULT}/_state/coordination/messages.tsv}"
 TIMESTAMP=$(date -u +%Y%m%dT%H%M%SZ)
 
 # Guard: require explicit approval
@@ -39,8 +44,8 @@ fi
 
 # Get before metrics
 BEFORE_ENTRIES=$(tail -n +2 "$LOG_PATH" | wc -l | tr -d ' ')
-BEFORE_MALFORMED=$(/Users/others/bin/coordination-integrity.sh check "$LOG_PATH" 2>&1 | grep -oE 'malformed=[0-9]+' | cut -d= -f2 || echo "0")
-BEFORE_OOO=$(/Users/others/bin/coordination-integrity.sh check "$LOG_PATH" 2>&1 | grep -oE 'out_of_order=[0-9]+' | cut -d= -f2 || echo "0")
+BEFORE_MALFORMED=$("${BIN_DIR}/coordination-integrity.sh" check "$LOG_PATH" 2>&1 | grep -oE 'malformed=[0-9]+' | cut -d= -f2 || echo "0")
+BEFORE_OOO=$("${BIN_DIR}/coordination-integrity.sh" check "$LOG_PATH" 2>&1 | grep -oE 'out_of_order=[0-9]+' | cut -d= -f2 || echo "0")
 
 echo "=== BEFORE CANONICALIZATION ==="
 echo "Log: $LOG_PATH"
@@ -70,8 +75,8 @@ mv "$TEMP_FILE" "$LOG_PATH"
 
 # Get after metrics
 AFTER_ENTRIES=$(tail -n +2 "$LOG_PATH" | wc -l | tr -d ' ')
-AFTER_MALFORMED=$(/Users/others/bin/coordination-integrity.sh check "$LOG_PATH" 2>&1 | grep -oE 'malformed=[0-9]+' | cut -d= -f2 || echo "0")
-AFTER_OOO=$(/Users/others/bin/coordination-integrity.sh check "$LOG_PATH" 2>&1 | grep -oE 'out_of_order=[0-9]+' | cut -d= -f2 || echo "0")
+AFTER_MALFORMED=$("${BIN_DIR}/coordination-integrity.sh" check "$LOG_PATH" 2>&1 | grep -oE 'malformed=[0-9]+' | cut -d= -f2 || echo "0")
+AFTER_OOO=$("${BIN_DIR}/coordination-integrity.sh" check "$LOG_PATH" 2>&1 | grep -oE 'out_of_order=[0-9]+' | cut -d= -f2 || echo "0")
 
 echo "=== AFTER CANONICALIZATION ==="
 echo "Entries: $AFTER_ENTRIES"
@@ -87,7 +92,7 @@ if [[ "$BEFORE_ENTRIES" != "$AFTER_ENTRIES" ]]; then
 fi
 
 # Final integrity check
-if /Users/others/bin/coordination-integrity.sh check "$LOG_PATH" 2>&1 | grep -q "^PASS"; then
+if "${BIN_DIR}/coordination-integrity.sh" check "$LOG_PATH" 2>&1 | grep -q "^PASS"; then
     echo "=== RESULT ==="
     echo "PASS: Canonicalization complete"
     echo "Backup: $BACKUP_PATH"

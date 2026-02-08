@@ -5,6 +5,8 @@ set -euo pipefail
 # Read-only audit of GitHub rulesets (and minimal branch-protection signals)
 # for drift detection. Writes optional receipts; never mutates repo settings.
 
+ROOT_DIR="${0:A:h:h}"
+
 usage() {
   cat <<'EOF'
 Usage:
@@ -12,7 +14,7 @@ Usage:
 
 Defaults:
   --repo hummbl-dev/founder-mode
-  --out-dir /Users/others/_state/coordination/ruleset-audit
+  --out-dir $WORKSPACE_ROOT/_state/coordination/ruleset-audit
 
 Options:
   --expect   Comma-separated expectations. Example:
@@ -22,13 +24,13 @@ Options:
 
 Notes:
   - Uses gh API; for auth override issues, run via:
-      env -u GH_TOKEN -u GITHUB_TOKEN /Users/others/bin/ruleset-audit.sh
+      env -u GH_TOKEN -u GITHUB_TOKEN ruleset-audit.sh
 EOF
 }
 
 REPO="hummbl-dev/founder-mode"
 EXPECT=""
-OUT_DIR="/Users/others/_state/coordination/ruleset-audit"
+OUT_DIR="${ROOT_DIR}/_state/coordination/ruleset-audit"
 SOFT=0
 
 while [ "$#" -gt 0 ]; do
@@ -154,4 +156,3 @@ if [ "${rc}" -ne 0 ] && [ "${SOFT}" -eq 1 ]; then
   exit 0
 fi
 exit "${rc}"
-

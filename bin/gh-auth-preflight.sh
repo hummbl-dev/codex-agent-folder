@@ -2,7 +2,8 @@
 set -euo pipefail
 
 MODE="${1:-check}"
-LOG_DIR="${GH_PREFLIGHT_LOG_DIR:-/Users/others/_state/coordination}"
+ROOT_DIR="${0:A:h:h}"
+LOG_DIR="${GH_PREFLIGHT_LOG_DIR:-${ROOT_DIR}/_state/coordination}"
 LOG_FILE="${GH_PREFLIGHT_LOG_FILE:-${LOG_DIR}/gh-auth-preflight.tsv}"
 AGENT="${AGENT_NAME:-unknown}"
 

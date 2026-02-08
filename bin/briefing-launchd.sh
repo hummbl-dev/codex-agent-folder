@@ -5,6 +5,9 @@ set -euo pipefail
 # LaunchAgent helper for Founder Mode briefing scheduler (runs scheduler --once on interval).
 # Non-destructive: backs up any existing plist before overwriting.
 
+ROOT_DIR="${0:A:h:h}"
+FOUNDER_REPO_DIR_DEFAULT="${ROOT_DIR}/founder-mode/founder-mode"
+
 usage() {
   cat <<'EOF'
 Usage:
@@ -14,7 +17,7 @@ Usage:
   briefing-launchd.sh uninstall [--label <label>]
 
 Defaults:
-  --repo-dir  /Users/others/founder-mode/founder-mode
+  --repo-dir  $WORKSPACE_ROOT/founder-mode/founder-mode
   --label     ai.founder-mode.briefing
   --interval  60
 
@@ -25,7 +28,7 @@ Notes:
 EOF
 }
 
-REPO_DIR="/Users/others/founder-mode/founder-mode"
+REPO_DIR="${FOUNDER_REPO_DIR_DEFAULT}"
 LABEL="ai.founder-mode.briefing"
 INTERVAL="60"
 
@@ -166,4 +169,3 @@ case "${action}" in
     exit 2
     ;;
 esac
-

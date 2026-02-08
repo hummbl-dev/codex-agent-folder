@@ -4,8 +4,11 @@ set -euo pipefail
 WATCH_AGENT="${1:-codex}"
 WATCH_COUNT="${WATCH_COUNT:-30}"
 AUDIT_INTERVAL_SECONDS="${AUDIT_INTERVAL_SECONDS:-30}"
-BRIDGE_SCRIPT="/Users/others/bin/agent-bridge.sh"
-HEARTBEAT_LOG="${HEARTBEAT_LOG:-/Users/others/_state/coordination/heartbeat.tsv}"
+ROOT_DIR="${0:A:h:h}"
+BIN_DIR="${ROOT_DIR}/bin"
+
+BRIDGE_SCRIPT="${BIN_DIR}/agent-bridge.sh"
+HEARTBEAT_LOG="${HEARTBEAT_LOG:-${ROOT_DIR}/_state/coordination/heartbeat.tsv}"
 
 usage() {
   cat <<'EOF'

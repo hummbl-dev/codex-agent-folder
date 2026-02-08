@@ -2,8 +2,11 @@
 set -euo pipefail
 
 SELF="${AGENT_NAME:-codex}"
-FOUNDATION_COORD_ROOT="/Users/others/founder-mode/founder-mode/_state/coordination"
-LEGACY_COORD_ROOT="/Users/others/_state/coordination"
+ROOT_DIR="${0:A:h:h}"
+FOUNDER_REPO_DIR_DEFAULT="${ROOT_DIR}/founder-mode/founder-mode"
+
+FOUNDATION_COORD_ROOT="${FOUNDER_REPO_DIR_DEFAULT}/_state/coordination"
+LEGACY_COORD_ROOT="${ROOT_DIR}/_state/coordination"
 SINGLE_SOURCE_MODE="${COORD_SINGLE_SOURCE_MODE:-enforce}"
 
 detect_root_dir() {
@@ -13,7 +16,7 @@ detect_root_dir() {
   fi
 
   case "$(pwd -P)" in
-    /Users/others/founder-mode/founder-mode* )
+    ${FOUNDER_REPO_DIR_DEFAULT}* )
       printf "%s\n" "${FOUNDATION_COORD_ROOT}"
       return
       ;;
@@ -92,9 +95,9 @@ Usage:
 Notes:
   - Timestamps are UTC ISO-8601.
   - Default log root auto-detects founder-mode first:
-    /Users/others/founder-mode/founder-mode/_state/coordination/messages.tsv
+    $WORKSPACE_ROOT/founder-mode/founder-mode/_state/coordination/messages.tsv
   - Legacy fallback:
-    /Users/others/_state/coordination/messages.tsv
+    $WORKSPACE_ROOT/_state/coordination/messages.tsv
   - Single-source mode (default): COORD_SINGLE_SOURCE_MODE=enforce
 EOF
 }

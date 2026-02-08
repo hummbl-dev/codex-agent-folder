@@ -1,8 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-BUS_FILE_DEFAULT="/Users/others/founder-mode/founder-mode/_state/coordination/messages.tsv"
-OUT_DIR_DEFAULT="/Users/others/_state/monitoring"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
+FOUNDER_REPO_DIR_DEFAULT="${ROOT_DIR}/founder-mode/founder-mode"
+
+BUS_FILE_DEFAULT="${FOUNDER_REPO_DIR_DEFAULT}/_state/coordination/messages.tsv"
+OUT_DIR_DEFAULT="${ROOT_DIR}/_state/monitoring"
 
 BUS_FILE="${BUS_FILE:-$BUS_FILE_DEFAULT}"
 OUT_DIR="${OUT_DIR:-$OUT_DIR_DEFAULT}"
@@ -12,8 +16,8 @@ FETCH_INTERVAL_SEC="${FETCH_INTERVAL_SEC:-300}"
 ENABLE_FETCH="${ENABLE_FETCH:-0}"
 
 # Repos to watch for drift
-REPO_A_DEFAULT="/Users/others/founder-mode/founder-mode"
-REPO_B_DEFAULT="/Users/others"
+REPO_A_DEFAULT="${FOUNDER_REPO_DIR_DEFAULT}"
+REPO_B_DEFAULT="${ROOT_DIR}"
 REPO_A="${REPO_A:-$REPO_A_DEFAULT}"
 REPO_B="${REPO_B:-$REPO_B_DEFAULT}"
 

@@ -1,9 +1,13 @@
 #!/usr/bin/env zsh
 set -euo pipefail
 
-COORD_LOG="${COORD_LOG_PATH:-/Users/others/founder-mode/founder-mode/_state/coordination/messages.tsv}"
-BASELINE_FILE="${COORD_BASELINE_FILE:-/Users/others/_state/coordination/health-baseline.env}"
-HEALTH_SCRIPT="${COORD_HEALTH_SCRIPT:-/Users/others/bin/coordination-health.sh}"
+ROOT_DIR="${0:A:h:h}"
+BIN_DIR="${ROOT_DIR}/bin"
+FOUNDER_REPO_DIR_DEFAULT="${ROOT_DIR}/founder-mode/founder-mode"
+
+COORD_LOG="${COORD_LOG_PATH:-${FOUNDER_REPO_DIR_DEFAULT}/_state/coordination/messages.tsv}"
+BASELINE_FILE="${COORD_BASELINE_FILE:-${ROOT_DIR}/_state/coordination/health-baseline.env}"
+HEALTH_SCRIPT="${COORD_HEALTH_SCRIPT:-${BIN_DIR}/coordination-health.sh}"
 
 usage() {
   cat <<'EOF'

@@ -73,9 +73,11 @@ This workspace is operated from two distinct environments:
 
 The workspace uses a **two-repo architecture** with agent-aligned entry points.
 
-### Root Repository (`/Users/others`)
+### Root Repository (`$WORKSPACE_ROOT`)
 
 This is your **personal workspace repository** — it tracks scaffold, entry scripts, and tooling configuration. It does NOT track agent identity content (which lives in the nested repo).
+
+`$WORKSPACE_ROOT` means the directory where this scaffold repo is checked out (the folder containing `AGENTS.md`).
 
 **Remote:** Configurable per your preference
 
@@ -93,12 +95,12 @@ This is your **personal workspace repository** — it tracks scaffold, entry scr
 
 ### Nested Repository (`shared-hummbl-space/`)
 
-This is the **HUMMBL agent federation repository** — it contains all 65 agent identity stacks, avatars, and shared memory.
+This is the **HUMMBL agent federation repository** — it contains agent identity stacks, avatars, and shared memory.
 
 **Remote:** `https://github.com/hummbl-dev/shared-hummbl-space.git`
 
 **Contents:**
-- `agents/` — 65 agent identity stacks (IDENTITY.md, AGENT.md, SOUL.md, USER.md, MEMORY.md)
+- `agents/` — agent identity stacks (IDENTITY.md, AGENT.md, SOUL.md, USER.md, MEMORY.md)
 - `avatars/` — PNG assets + GALLERY.md registry
 - `memory/` — Shared workspace daily logs
 - `scripts/` — Agent tooling
@@ -129,23 +131,23 @@ git pull origin main
 
 **Rationale:** You want each CLI tool to spawn its named agent identity. This architecture:
 1. Keeps agent content (`shared-hummbl-space/`) in its own repo with its own remote
-2. Tracks scaffold/entry scripts in root repo (`/Users/others`)
+2. Tracks scaffold/entry scripts in root repo (`$WORKSPACE_ROOT`)
 3. Uses symlinks for convenient access
 4. Provides clear agent-aligned entry points
 
 **Conversion completed:**
-- ✅ Root repo initialized (`/Users/others/.git`)
+- ✅ Root repo initialized (`$WORKSPACE_ROOT/.git`)
 - ✅ `.NO_GIT_REPO` canonicalized (root is a scaffold git repo; identity content remains in nested repos)
 - ✅ `.REPO_AUTHORIZED` created
 - ✅ `.gitignore` with strict allowlist
 - ✅ Entry scripts created (`bin/kimi-entry.sh`, `bin/codex-entry.sh`, `bin/claude-entry.sh`)
-- ✅ Agent identity stacks verified (65 agents total)
+- ✅ Agent identity stacks verified (see validator)
 - ✅ `codex-agent-folder/` history merged
 
 ## Workspace Layout
 
 ```
-/Users/others/                          # Root workspace (git repo — scaffold only)
+$WORKSPACE_ROOT/                        # Root workspace (git repo — scaffold only)
 ├── AGENTS.md                           # This file — canonical agent instructions
 ├── .gitignore                          # Strict allowlist pattern
 ├── .REPO_AUTHORIZED                    # Option A conversion marker
@@ -156,7 +158,7 @@ git pull origin main
 │   └── claude-entry.sh                 # Launch claude with Claude identity
 ├── shared-hummbl-space/                # NESTED GIT REPO (hummbl-agent)
 │   ├── .git/                           # Separate git repository
-│   ├── agents/                         # 65 agent identity stacks
+│   ├── agents/                         # agent identity stacks
 │   │   ├── kimi/
 │   │   ├── codex/
 │   │   ├── claude/
@@ -178,7 +180,7 @@ git pull origin main
 
 ### Root Workspace: Scaffold Repository
 
-`/Users/others` is now a **git repository tracking scaffold only**. The agent identity content lives in `shared-hummbl-space/` which is a nested git repo.
+`$WORKSPACE_ROOT` is now a **git repository tracking scaffold only**. The agent identity content lives in `shared-hummbl-space/` which is a nested git repo.
 
 **Symlink Strategy:**
 - Root symlinks (`agents`, `avatars`, `memory`, `scripts`) point to `shared-hummbl-space/`
@@ -225,7 +227,7 @@ git pull origin main
 
 - Log daily highlights in `memory/YYYY-MM-DD.md` **only when explicitly instructed** by Reuben.
 - **Do NOT write to any agent's personal memory** (`workspace/agents/*/memory/` or `*/MEMORY.md`) unless Reuben explicitly authorizes the target agent and content.
-- **Do NOT write memory for speculative work, failed branches, or tasks without user confirmation of relevance.** Memory pollution across 65 agents is a governance risk.
+- **Do NOT write memory for speculative work, failed branches, or tasks without user confirmation of relevance.** Memory pollution across the agent federation is a governance risk.
 - Promote durable truths to shared memory only with explicit approval.
 - Record escalation attempts + responses in shared daily memory only after Reuben confirms they should be persisted.
 
@@ -276,19 +278,26 @@ The following was reported by Opus 4.6 in VS Code Copilot Chat based on a Codex 
 # Confirm working directory
 pwd
 
-# Root must be a git repo (anchored to absolute path)
-test -d /Users/others/.git && echo "OK: root .git present" || echo "ERROR: root .git missing"
+# Resolve workspace root from git (portable across machines)
+WORKSPACE_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || true)"
+if [ -z "${WORKSPACE_ROOT}" ]; then
+  echo "ERROR: WORKSPACE_ROOT not resolved (run from inside the root scaffold repo)"
+  exit 1
+fi
+
+# Root must be a git repo
+test -d "${WORKSPACE_ROOT}/.git" && echo "OK: root .git present (${WORKSPACE_ROOT})" || echo "ERROR: root .git missing (${WORKSPACE_ROOT})"
 
 # Root git remotes (local-only check)
 (
-    cd /Users/others || exit 1
+    cd "${WORKSPACE_ROOT}" || exit 1
     git remote -v
 )
 
 # codex-agent-folder repo state (subshell — no directory leakage)
-if [ -d /Users/others/codex-agent-folder/.git ]; then
+if [ -d "${WORKSPACE_ROOT}/codex-agent-folder/.git" ]; then
     (
-        cd /Users/others/codex-agent-folder || exit 1
+        cd "${WORKSPACE_ROOT}/codex-agent-folder" || exit 1
         git remote -v
         git status -sb
         git log --oneline --decorate -5
@@ -348,8 +357,8 @@ grep -n 'v0.0.1' workspace/agents/rpbx/IDENTITY.md workspace/agents/rpbx/SOUL.md
 
 ### Verified State (terminal evidence — 2026-02-07T10:55:00Z)
 
-- Validator status: CLEAN — 65 agents scanned, 0 findings.
-  - Source: `codex-agent-folder/scripts/validate-agent-stacks.sh` executed from `/Users/others`.
+- Validator status: CLEAN — agent stacks scanned, 0 findings.
+  - Source: `codex-agent-folder/scripts/validate-agent-stacks.sh` executed from `$WORKSPACE_ROOT`.
 - Batch approval complete (2026-02-06): Warden, Ledger, Triage, A11y — all approved, gallery updated, identity docs synced.
 - Smart guardrails pipeline LIVE on `main` (PR #33 merged 2026-02-07): `classify` → `code-checks` → `guardrails`. Both code and docs-only paths validated.
 - All feature branches cleaned. No stale branches on hummbl-agent.
@@ -361,7 +370,7 @@ Kimi remediation complete (identity and avatar parity achieved):
   - Added: `avatars/kimi-avatar-brief.md`
   - Palette reference: `workspace/agents/kimi/IDENTITY.md` — "steel/orange execution palette" (avatar consistent with `avatars/kimi-avatar.png`, `avatars/kimi-avatar-mono.png`).
   - Gallery row present and approved: `avatars/GALLERY.md` (contains "Kimi … ✅ Approved (Reuben, 2026-02-05)").
-- Agent count confirmed: 65.
+- Agent count confirmed.
 - `workspace/hummbl/operational/hummbl-agent`:
   - Local status observed: `## main...origin/main [behind 16]` with untracked: `CLASSIFICATION.md`, `agents/rpbx.md`.
 - `codex-agent-folder` repository:
@@ -405,7 +414,7 @@ claude                  # Launches claude with Claude identity
 | **Codex** | `codex` | Execution, RPBx assignments | compass/grid |
 | **Claude** | `claude` | Advisory, summarization, review | target/synthesis |
 
-All 65 agents (including these 3) have full identity stacks in `shared-hummbl-space/agents/`.
+All agents (including these 3) have full identity stacks in `shared-hummbl-space/agents/`.
 
 ## Agent Assignment Context
 

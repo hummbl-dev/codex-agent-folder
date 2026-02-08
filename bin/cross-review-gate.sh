@@ -1,7 +1,11 @@
 #!/usr/bin/env zsh
 set -euo pipefail
 
-GH_AUTH_RECOVERY_SCRIPT="/Users/others/bin/gh-auth-recovery.sh"
+ROOT_DIR="${0:A:h:h}"
+BIN_DIR="${ROOT_DIR}/bin"
+WRAPPER_GH="${BIN_DIR}/gh"
+
+GH_AUTH_RECOVERY_SCRIPT="${BIN_DIR}/gh-auth-recovery.sh"
 
 usage() {
   cat <<'USAGE'
@@ -28,7 +32,7 @@ resolve_gh_bin() {
   fi
   local candidate
   candidate="$(command -v gh 2>/dev/null || true)"
-  if [ -n "${candidate}" ] && [ -x "${candidate}" ] && [ "${candidate}" != "/Users/others/bin/gh" ]; then
+  if [ -n "${candidate}" ] && [ -x "${candidate}" ] && [ "${candidate}" != "${WRAPPER_GH}" ]; then
     printf "%s\n" "${candidate}"
     return
   fi

@@ -1,9 +1,13 @@
 #!/usr/bin/env zsh
 set -euo pipefail
 
-BRIDGE="/Users/others/bin/agent-bridge.sh"
-CROSS="/Users/others/bin/cross-review-gate.sh"
-DEFAULT_REPO_DIR="/Users/others/founder-mode/founder-mode"
+ROOT_DIR="${0:A:h:h}"
+BIN_DIR="${ROOT_DIR}/bin"
+FOUNDER_REPO_DIR_DEFAULT="${ROOT_DIR}/founder-mode/founder-mode"
+
+BRIDGE="${BIN_DIR}/agent-bridge.sh"
+CROSS="${BIN_DIR}/cross-review-gate.sh"
+DEFAULT_REPO_DIR="${FOUNDER_REPO_DIR_DEFAULT}"
 
 # Default target for Codex -> Claude Code.
 DEFAULT_TO_AGENT="claude-code"

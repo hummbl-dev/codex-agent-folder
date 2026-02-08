@@ -4,7 +4,10 @@ set -euo pipefail
 # founder-briefing.sh
 # Operator wrapper around Founder Mode Morning Briefing (Wave 1).
 
-DEFAULT_REPO_DIR="/Users/others/founder-mode/founder-mode"
+ROOT_DIR="${0:A:h:h}"
+FOUNDER_REPO_DIR_DEFAULT="${ROOT_DIR}/founder-mode/founder-mode"
+
+DEFAULT_REPO_DIR="${FOUNDER_REPO_DIR_DEFAULT}"
 
 usage() {
   cat <<'EOF'
@@ -15,7 +18,7 @@ Usage:
   founder-briefing.sh status [--repo-dir <path>] [--config <path>]
 
 Defaults:
-  --repo-dir /Users/others/founder-mode/founder-mode
+  --repo-dir $WORKSPACE_ROOT/founder-mode/founder-mode
   --config   founder_mode/state/preferences.json (repo-relative)
 
 Notes:
@@ -112,4 +115,3 @@ case "${action}" in
     exit 2
     ;;
 esac
-

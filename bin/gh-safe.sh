@@ -1,7 +1,10 @@
 #!/usr/bin/env zsh
 set -euo pipefail
 
-PREFLIGHT_SCRIPT="/Users/others/bin/gh-auth-preflight.sh"
+ROOT_DIR="${0:A:h:h}"
+BIN_DIR="${ROOT_DIR}/bin"
+
+PREFLIGHT_SCRIPT="${BIN_DIR}/gh-auth-preflight.sh"
 
 if [ "$#" -eq 0 ]; then
   echo "Usage: gh-safe.sh <gh arguments...>" >&2
@@ -24,7 +27,7 @@ resolve_gh_bin() {
   fi
   local candidate
   candidate="$(command -v gh 2>/dev/null || true)"
-  if [ -n "${candidate}" ] && [ -x "${candidate}" ] && [ "${candidate}" != "/Users/others/bin/gh" ]; then
+  if [ -n "${candidate}" ] && [ -x "${candidate}" ] && [ "${candidate}" != "${BIN_DIR}/gh" ]; then
     printf "%s\n" "${candidate}"
     return
   fi

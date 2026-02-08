@@ -1,8 +1,11 @@
 #!/usr/bin/env zsh
 set -euo pipefail
 
-FOUNDATION_LOG="/Users/others/founder-mode/founder-mode/_state/coordination/messages.tsv"
-LEGACY_LOG="/Users/others/_state/coordination/messages.tsv"
+ROOT_DIR="${0:A:h:h}"
+FOUNDER_REPO_DIR_DEFAULT="${ROOT_DIR}/founder-mode/founder-mode"
+
+FOUNDATION_LOG="${FOUNDER_REPO_DIR_DEFAULT}/_state/coordination/messages.tsv"
+LEGACY_LOG="${ROOT_DIR}/_state/coordination/messages.tsv"
 
 MAX_OUT_OF_ORDER="${COORD_MAX_OUT_OF_ORDER:-0}"
 MAX_MALFORMED="${COORD_MAX_MALFORMED:-0}"
@@ -26,9 +29,9 @@ Thresholds (env):
   COORD_MAX_MALFORMED_RATE max allowed malformed rate [0.00-1.00] (default: 0.00)
 
 Examples:
-  /Users/others/bin/coordination-health.sh
-  /Users/others/bin/coordination-health.sh --all
-  COORD_MAX_OUT_OF_ORDER=1 /Users/others/bin/coordination-health.sh
+  coordination-health.sh
+  coordination-health.sh --all
+  COORD_MAX_OUT_OF_ORDER=1 coordination-health.sh
 EOF
 }
 

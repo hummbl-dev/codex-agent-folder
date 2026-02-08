@@ -1,8 +1,12 @@
 #!/usr/bin/env zsh
 set -euo pipefail
 
-DEFAULT_LOG="/Users/others/founder-mode/founder-mode/_state/coordination/messages.tsv"
-HEALTH_SCRIPT="/Users/others/bin/coordination-health.sh"
+ROOT_DIR="${0:A:h:h}"
+BIN_DIR="${ROOT_DIR}/bin"
+FOUNDER_REPO_DIR_DEFAULT="${ROOT_DIR}/founder-mode/founder-mode"
+
+DEFAULT_LOG="${FOUNDER_REPO_DIR_DEFAULT}/_state/coordination/messages.tsv"
+HEALTH_SCRIPT="${BIN_DIR}/coordination-health.sh"
 
 usage() {
   cat <<'USAGE'

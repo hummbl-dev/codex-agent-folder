@@ -1,13 +1,17 @@
 #!/usr/bin/env zsh
 set -euo pipefail
 
-REGISTRY_SCRIPT="/Users/others/bin/validate-skill-registry.sh"
-COORD_SCRIPT="/Users/others/bin/coordination-integrity.sh"
-AUTH_SCRIPT="/Users/others/bin/gh-auth-recovery.sh"
-CROSS_SCRIPT="/Users/others/bin/cross-review-gate.sh"
+ROOT_DIR="${0:A:h:h}"
+BIN_DIR="${ROOT_DIR}/bin"
+FOUNDER_REPO_DIR_DEFAULT="${ROOT_DIR}/founder-mode/founder-mode"
 
-LOG_PATH="/Users/others/founder-mode/founder-mode/_state/coordination/messages.tsv"
-REPO_PATH="/Users/others/founder-mode/founder-mode"
+REGISTRY_SCRIPT="${BIN_DIR}/validate-skill-registry.sh"
+COORD_SCRIPT="${BIN_DIR}/coordination-integrity.sh"
+AUTH_SCRIPT="${BIN_DIR}/gh-auth-recovery.sh"
+CROSS_SCRIPT="${BIN_DIR}/cross-review-gate.sh"
+
+LOG_PATH="${FOUNDER_REPO_DIR_DEFAULT}/_state/coordination/messages.tsv"
+REPO_PATH="${FOUNDER_REPO_DIR_DEFAULT}"
 PR_NUMBER="${SKILLS_HEALTH_PR:-}"
 SOFT_MODE=0
 VERBOSE=0

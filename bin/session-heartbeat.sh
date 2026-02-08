@@ -1,8 +1,11 @@
 #!/usr/bin/env zsh
 set -euo pipefail
 
-COORD_LOG="${COORD_LOG_PATH:-/Users/others/founder-mode/founder-mode/_state/coordination/messages.tsv}"
-HEARTBEAT_DIR="${HEARTBEAT_DIR:-/Users/others/_state/coordination}"
+ROOT_DIR="${0:A:h:h}"
+FOUNDER_REPO_DIR_DEFAULT="${ROOT_DIR}/founder-mode/founder-mode"
+
+COORD_LOG="${COORD_LOG_PATH:-${FOUNDER_REPO_DIR_DEFAULT}/_state/coordination/messages.tsv}"
+HEARTBEAT_DIR="${HEARTBEAT_DIR:-${ROOT_DIR}/_state/coordination}"
 HEARTBEAT_LOG="${HEARTBEAT_LOG:-${HEARTBEAT_DIR}/heartbeat.tsv}"
 NOTE="${HEARTBEAT_NOTE:-caffeine=on}"
 

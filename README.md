@@ -2,7 +2,7 @@
 
 **Status:** Option A (Revised) — Agent-Aligned Workspace with Nested Repo  
 **Created:** 2026-02-06  
-**Agent Count:** 58
+**Agent Count:** (run `agent-count`)
 
 ## Overview
 
@@ -37,8 +37,10 @@ agent-list              # List all agents
 
 ## Repository Structure
 
+`$WORKSPACE_ROOT` below means the directory where you checked out this scaffold repo (the folder containing `AGENTS.md`).
+
 ```
-/Users/others/                    ← This repo (scaffold only)
+$WORKSPACE_ROOT/                 ← This repo (scaffold only)
 ├── AGENTS.md                     # Canonical agent instructions
 ├── .gitignore                    # Strict exclusions
 ├── .REPO_AUTHORIZED              # Conversion marker
@@ -49,7 +51,7 @@ agent-list              # List all agents
 │   └── claude-entry.sh
 └── shared-hummbl-space/          # NESTED REPO (hummbl-agent)
     ├── .git/                     # Separate git repository
-    ├── agents/                   # 58 agent identity stacks
+    ├── agents/                   # agent identity stacks
     ├── avatars/                  # PNG assets + GALLERY.md
     ├── memory/                   # Shared daily logs
     └── scripts/                  # Agent tooling
@@ -63,7 +65,7 @@ scripts → shared-hummbl-space/scripts
 
 ## Two-Repo Architecture
 
-### Root Repo (`/Users/others`)
+### Root Repo (`$WORKSPACE_ROOT`)
 - **Purpose:** Your personal workspace scaffold
 - **Remote:** (configure as needed)
 - **Tracks:** Entry scripts, AGENTS.md, tooling configuration
@@ -71,7 +73,7 @@ scripts → shared-hummbl-space/scripts
 ### Nested Repo (`shared-hummbl-space/`)
 - **Purpose:** HUMMBL agent federation content
 - **Remote:** `https://github.com/hummbl-dev/shared-hummbl-space.git`
-- **Contains:** 58 agents, avatars, shared memory, scripts
+- **Contains:** agent identity stacks, avatars, shared memory, scripts
 
 ## Updating
 

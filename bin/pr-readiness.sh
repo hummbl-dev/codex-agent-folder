@@ -4,17 +4,21 @@ set -euo pipefail
 # pr-readiness.sh
 # Read-only PR readiness report (CI + review + mergeability + cross-review gate).
 
+ROOT_DIR="${0:A:h:h}"
+BIN_DIR="${ROOT_DIR}/bin"
+FOUNDER_REPO_DIR_DEFAULT="${ROOT_DIR}/founder-mode/founder-mode"
+
 usage() {
   cat <<'EOF'
 Usage:
   pr-readiness.sh <pr_number> [--repo-dir <path>] [--soft]
 
 Defaults:
-  --repo-dir /Users/others/founder-mode/founder-mode
+  --repo-dir $WORKSPACE_ROOT/founder-mode/founder-mode
 
 Notes:
   - Uses gh API; avoid auth override issues via:
-      env -u GH_TOKEN -u GITHUB_TOKEN /Users/others/bin/pr-readiness.sh <pr>
+      env -u GH_TOKEN -u GITHUB_TOKEN pr-readiness.sh <pr>
 EOF
 }
 
@@ -25,7 +29,7 @@ if [ -z "${PR}" ] || [[ "${PR}" = "-h" ]] || [[ "${PR}" = "--help" ]]; then
 fi
 shift
 
-REPO_DIR="/Users/others/founder-mode/founder-mode"
+REPO_DIR="${FOUNDER_REPO_DIR_DEFAULT}"
 SOFT=0
 
 while [ "$#" -gt 0 ]; do
@@ -71,7 +75,7 @@ if [ "${rc}" -ne 0 ]; then
   exit 1
 fi
 
-OUT_DIR="/Users/others/_state/coordination/pr-readiness"
+OUT_DIR="${ROOT_DIR}/_state/coordination/pr-readiness"
 mkdir -p "${OUT_DIR}"
 chmod 700 "${OUT_DIR}" 2>/dev/null || true
 receipt_json="${OUT_DIR}/pr_${PR}_${ts}.json"
@@ -116,7 +120,7 @@ PY
 exit_code=0
 
 set +e
-cross_out="$(cd "${REPO_DIR}" && /Users/others/bin/cross-review-gate.sh verify "${PR}" 2>&1)"
+cross_out="$(cd "${REPO_DIR}" && "${BIN_DIR}/cross-review-gate.sh" verify "${PR}" 2>&1)"
 cross_rc="$?"
 set -e
 if [ "${cross_rc}" -ne 0 ]; then
@@ -128,7 +132,7 @@ else
 fi
 
 set +e
-coord_gate_out="$(/Users/others/bin/coordination-gate.sh check 2>&1)"
+coord_gate_out="$("${BIN_DIR}/coordination-gate.sh" check 2>&1)"
 coord_gate_rc="$?"
 set -e
 if [ "${coord_gate_rc}" -ne 0 ]; then

@@ -6,15 +6,19 @@ export AGENT_NAME="claude"
 export AGENT_HOME="$HOME/workspace/agents/claude"
 export AGENT_IDENTITY="$AGENT_HOME/IDENTITY.md"
 export AGENT_MEMORY="$AGENT_HOME/memory"
-GH_PREFLIGHT_SCRIPT="/Users/others/bin/gh-auth-preflight.sh"
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
+BIN_DIR="${ROOT_DIR}/bin"
+GH_PREFLIGHT_SCRIPT="${BIN_DIR}/gh-auth-preflight.sh"
 
 # Prevent env-token override of keyring auth in this session.
 unset GH_TOKEN GITHUB_TOKEN
 
 # Ensure gh wrapper hardening is active in this shell lineage.
 case ":$PATH:" in
-  *":/Users/others/bin:"*) ;;
-  *) export PATH="/Users/others/bin:$PATH" ;;
+  *":${BIN_DIR}:"*) ;;
+  *) export PATH="${BIN_DIR}:$PATH" ;;
 esac
 
 # Display boot sequence

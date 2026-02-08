@@ -1,10 +1,14 @@
 #!/usr/bin/env zsh
 set -euo pipefail
 
-TARGET_REPO="${1:-/Users/others/founder-mode/founder-mode}"
+ROOT_DIR="${0:A:h:h}"
+BIN_DIR="${ROOT_DIR}/bin"
+FOUNDER_REPO_DIR_DEFAULT="${ROOT_DIR}/founder-mode/founder-mode"
+
+TARGET_REPO="${1:-${FOUNDER_REPO_DIR_DEFAULT}}"
 HOOK_DIR="${TARGET_REPO}/.git/hooks"
-GATE_SCRIPT="/Users/others/bin/coordination-gate.sh"
-AUTH_PREFLIGHT_SCRIPT="/Users/others/bin/gh-auth-preflight.sh"
+GATE_SCRIPT="${BIN_DIR}/coordination-gate.sh"
+AUTH_PREFLIGHT_SCRIPT="${BIN_DIR}/gh-auth-preflight.sh"
 
 usage() {
   cat <<'EOF'
@@ -13,8 +17,8 @@ Usage:
 
 Behavior:
   - Installs pre-commit and pre-push hooks that run:
-      /Users/others/bin/coordination-gate.sh check
-      /Users/others/bin/gh-auth-preflight.sh check (pre-push only)
+      coordination-gate.sh check
+      gh-auth-preflight.sh check (pre-push only)
   - Non-destructive: existing hooks are preserved as *.before-coordination
 EOF
 }
@@ -50,17 +54,17 @@ install_hook() {
   fi
 
   if [ "${hook_name}" = "pre-push" ]; then
-    cat > "${hook_path}" <<'EOF'
+    cat > "${hook_path}" <<EOF
 #!/usr/bin/env zsh
 set -euo pipefail
-/Users/others/bin/gh-auth-preflight.sh check
-/Users/others/bin/coordination-gate.sh check
+${AUTH_PREFLIGHT_SCRIPT} check
+${GATE_SCRIPT} check
 EOF
   else
-    cat > "${hook_path}" <<'EOF'
+    cat > "${hook_path}" <<EOF
 #!/usr/bin/env zsh
 set -euo pipefail
-/Users/others/bin/coordination-gate.sh check
+${GATE_SCRIPT} check
 EOF
   fi
   chmod +x "${hook_path}"

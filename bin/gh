@@ -1,8 +1,11 @@
 #!/usr/bin/env zsh
 set -euo pipefail
 
-PREFLIGHT_SCRIPT="/Users/others/bin/gh-auth-preflight.sh"
-SELF_PATH="/Users/others/bin/gh"
+ROOT_DIR="${0:A:h:h}"
+BIN_DIR="${ROOT_DIR}/bin"
+
+PREFLIGHT_SCRIPT="${BIN_DIR}/gh-auth-preflight.sh"
+SELF_PATH="${BIN_DIR}/gh"
 
 resolve_gh_bin() {
   if [ -n "${GH_REAL_BIN:-}" ] && [ -x "${GH_REAL_BIN}" ]; then

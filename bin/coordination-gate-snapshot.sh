@@ -1,8 +1,11 @@
 #!/usr/bin/env zsh
 set -euo pipefail
 
-GATE_SCRIPT="${COORD_GATE_SCRIPT:-/Users/others/bin/coordination-gate.sh}"
-SNAPSHOT_DIR="${COORD_SNAPSHOT_DIR:-/Users/others/_state/coordination}"
+ROOT_DIR="${0:A:h:h}"
+BIN_DIR="${ROOT_DIR}/bin"
+
+GATE_SCRIPT="${COORD_GATE_SCRIPT:-${BIN_DIR}/coordination-gate.sh}"
+SNAPSHOT_DIR="${COORD_SNAPSHOT_DIR:-${ROOT_DIR}/_state/coordination}"
 SNAPSHOT_TSV="${COORD_SNAPSHOT_TSV:-${SNAPSHOT_DIR}/gate-status.tsv}"
 
 timestamp_utc() {
